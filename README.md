@@ -20,7 +20,7 @@ Let's say I have a bunch of FastQ files that I want to analyze using my favorite
 Instead of having to manually create a number of running scripts or rewrite for every analysis a new script to do this work, BioGrid can help you saving time handling all of this.
 
 ```shell
-	bio-grid -i "/data/Project_X/Sample_Y/*_R1_*.fastq.gz","/data/Project_X/Sample_Y/*_R2_*.fastq.gz" -n Mapping -c "/software/bowtie2 -x /genomes/genome_index -1 <input1> -2 <input2> > <output>.sam" -o /data/Project_X/Sample_Y_mapping -s 1 -p 8	
+	bio-grid -i "/data/Project_X/Sample_Y/*_R1_*.fastq.gz","/data/Project_X/Sample_Y/*_R2_*.fastq.gz" -n bowtie_mapping -c "/software/bowtie2 -x /genomes/genome_index -p 8 -1 <input1> -2 <input2> > <output>.sam" -o /data/Project_X/Sample_Y_mapping -s 1 -p 8	
 ```
 
 What is happening here is the following:
@@ -40,11 +40,11 @@ All of this is just turned into a submission script that will look like this:
 
 ```shell
 #!/bin/bash
-#PBS -N test
-#PBS -l ncpus=2
+#PBS -N bowtie_mapping
+#PBS -l ncpus=8
 
 mkdir -p /data/Project_X/Sample_Y_mapping
-/software/bowtie2 -x /genomes/genome_index -1 /data/Project_X/Sample_Y/Sample_Y_L001_R1_001.fastq.gz -2 Sample_Y_L001_R2_001.fastq.gz > Mapping-output_001.sam
+/software/bowtie2 -x /genomes/genome_index -p 8 -1 /data/Project_X/Sample_Y/Sample_Y_L001_R1_001.fastq.gz -2 Sample_Y_L001_R2_001.fastq.gz > bowtie_mapping-output_001.sam
 ```
 
 and this will be repeated for every input files, according to the -s parameters. So in this case, given that we have 2 input files for each command line and that we have 60 R1 and 60 R2 FastQ files and we have specified "-s 1", 60 different jobs will be created and submitted, each with a specific read pair to be processed by Bowtie.

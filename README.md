@@ -28,7 +28,7 @@ What is happening here is the following:
 * the "-i" options specifies the input files or, as in this case, the location where to find input files based on a typical wildcard expression. You can actually specify as many input files/locations as you need using a comma separated list.
 * the "-n" specify the job name
 * the "-c" is the command line to be executed on the cluster / grid system. What BioGrid does is to fill in the 
-```shell
+```
 <input1>,<input2> and <output>
 ```
 

@@ -1,0 +1,102 @@
+#!/usr/bin/env ruby
+
+require 'optparse'
+
+options = {}
+options[:clean] = false
+options[:test] = false
+
+optparse = OptionParser.new do |opts|	
+	opts.banner = "\nCopyright(c) 2012 Francesco Strozzi\nUtility to create and distribute jobs on a queue system.\n\nE.g. #{$0} -i \"/Project_X/Sample_Y/*_R1_*.fastq\",\"/Project_X/Sample_Y/*_R2_*.fastq\" --name bowtie2 -s 10 -p 12 --command-line \"/software/bowtie2 -x /genomes/bowtie2_index/genome_index -1 <input1> -2 <input2> -p 12 > <output>.sam\" --output /tmp/Sample_Y_mapping --copy-to /archive/Sample_Y_mapping --erease-output\n\n\n"
+
+	opts.on("-n","--name NAME","Analysis name") do |name|
+		options[:name] = name
+	end
+
+	opts.on("-s","--split-number NUMBER","Number of input files (or group of files) to use per job") do |number| 
+		options[:number] = number
+	end
+
+	opts.on("-p","--processes PROCESSES","Number of processes per job") do |processes|
+		options[:processes] = processes
+	end
+
+	opts.on("-c","--command-line COMMANDLINE","Command line to be executed") do |cmd|
+		options[:cmd] = cmd
+	end
+
+	opts.on("-o","--output OUTPUT","Output folder") do |out|
+		options[:output] = out
+	end
+
+	opts.on("-r","--copy-to LOCATION","Copy the output once a job is terminated") do |location|
+		options[:copy] = location
+	end
+
+	opts.on("-e","--erease-output","Delete job output data when completed (useful to delete output temporary files on a computing node)") do |clean|
+		options[:clean] = true
+	end
+
+	opts.on("-d","--dry","Dry run. Just write the job scripts without sending them in queue (for debugging or testing)") {options[:dry] = true}
+
+	opts.on("-t","--test","Start the mapping only with the first group of reads (e.g. for testing parameters)") do |test|
+		options[:test] = true
+	end
+
+	opts.on("-i","--input INPUT1,INPUT2...",Array,"Location where to find input files (accepts wildecards). You can specify more than one input location, just provide a comma separated list") do |input|
+		options[:input] = input
+	end
+
+	opts.on("-h","--help","Display this screen") do
+		puts opts
+		print "\n"
+	end
+end
+
+optparse.parse!
+
+raise OptionParser::MissingArgument,"-i, --input [INPUT1,INPUT2...]\n" if options[:input].nil?
+raise OptionParser::MissingArgument,"-c, --command-line [command line]\n" if options[:cmd].nil?
+raise OptionParser::MissingArgument,"-n, --name [analysis name]\n" if options[:name].nil?
+raise OptionParser::MissingArgument,"-o, --output [output folder]\n" if options[:output].nil?
+
+
+groups = Hash.new {|h,k| h[k] = [] }
+options[:input].each_with_index do |location,index|
+	subgroup = []
+	Dir.glob(location).sort.each_slice(options[:number].to_i) {|subgroup| groups["input#{index+1}"] << subgroup}
+end
+
+inputs = groups.keys.sort
+
+groups[inputs.shift].each_with_index do |input1,index|
+	out = File.open("job.sh","w")
+	out.write("#!/bin/bash\n#PBS -N #{options[:name]}\n#PBS -l ncpus=#{options[:processes]}\n\n")
+	out.write("mkdir -p #{options[:output]}\n")
+	
+	commandline = ""
+	commandline = options[:cmd].gsub(/<input1>|<input>/,input1.join(","))
+	inputs.each do |input|
+		commandline.gsub!(/<#{input}>/,groups[input].shift.join(","))
+	end
+	output = options[:output]+"/"+options[:name]+"_output_%03d" % (index+1).to_s
+
+	commandline.gsub!(/<output>/,output)	
+	output << ".#{$1}" if commandline =~/#{output}\.(\S+)/
+	out.write(commandline+"\n")
+	
+	if options[:copy]
+		out.write("mkdir -p #{options[:copy]}\n")
+		out.write("cp #{output} #{options[:copy]}\n")
+	end
+	
+	out.write("rm -f #{output}") if options[:clean]
+	out.close
+	
+	system("qsub job.sh") unless options[:dry]
+	
+	break if options[:test]
+end
+
+
+

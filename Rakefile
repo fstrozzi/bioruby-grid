@@ -14,11 +14,11 @@ require 'rake'
 require 'jeweler'
 Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
-  gem.name = "bioruby-grid"
+  gem.name = "bio-grid"
   gem.homepage = "http://github.com/fstrozzi/bioruby-grid"
   gem.license = "MIT"
-  gem.summary = %Q{TODO: one-line summary of your gem}
-  gem.description = %Q{TODO: longer description of your gem}
+  gem.summary = %Q{A BioGem to submit jobs on a queue system}
+  gem.description = %{A BioGem to submit jobs on a queue system}
   gem.email = "francesco.strozzi@gmail.com"
   gem.authors = ["Francesco Strozzi"]
   # dependencies defined in Gemfile

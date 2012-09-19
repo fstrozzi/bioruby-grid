@@ -6,11 +6,11 @@ Utility to create and distribute jobs
 Usage
 =====
 
-This utility is a command line based tools built around the concept of a template that can be reused to generate tens, hundreds or thousands of different jobs to be sent on a queue system.
+This utility is a command line based tool built around the concept of a template that can be reused to generate tens, hundreds or thousands of different jobs to be sent on a queue system.
 
 It is particularly useful when dealing with BigData analysis (e.g. NGS data processing) on a distributed system.
 
-The code for now supports only PBS queue systems, but can be easily expanded to account also for other queueing systems.
+The tool for now supports only PBS queue systems, but can be easily expanded to account also for other queueing systems.
 
 A typical example 
 =================

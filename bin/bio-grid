@@ -43,7 +43,7 @@ optparse = OptionParser.new do |opts|
 		options[:test] = true
 	end
 
-	opts.on("-i","--input INPUT1,INPUT2...",Array,"Location where to find input files (accepts wildecards). You can specify more than one input location, just provide a comma separated list") do |input|
+	opts.on("-i","--input INPUT1,INPUT2...",Array,"Location where to find input files (accepts wildcards). You can specify more than one input location, just provide a comma separated list") do |input|
 		options[:input] = input
 	end
 

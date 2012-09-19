@@ -30,12 +30,10 @@ What is happening here is the following:
 * the "-c" is the command line to be executed on the cluster / grid system. What BioGrid does is to fill in the 
 ```
 <input1>,<input2> and <output>
-```
-
-placeholders with the corresponding parameters passed on the command lines. This is done for each input file and BioGrid will generate a unique output file name for each job.
+``` placeholders with the corresponding parameters passed on the command lines. This is done for each input file and BioGrid will generate a unique output file name for each job.
 
 * the "-o" just specify the location where output files for each job will be saved
-* the "-s" is a key parameter to specify the number of input files (or group files when more than one input is present in the command line) to be used for each job. So, going back to the FastQ example, if -s 1 is specified, each job will be run with exactly one FastQ R1 file and one FastQ R2 file. This gives you a great power to decide how to split the entire dataset analysis across multiple computing nodes.
+* the "-s" is a key parameter to specify the number of input files (or group of files when more than one input is present in the command line) to be used for each job. So, going back to the FastQ example, if -s 1 is specified, each job will be run with exactly one FastQ R1 file and one FastQ R2 file. This gives you a great power to decide how to split the entire dataset analysis across multiple computing nodes.
 * the "-p" parameter indicates how many processes we want to use for each job. This number needs to match with the actual number of threads / processes that our command or tool will use for the analysis.
 
 All of this is just turned into a submission script that will look like this:
@@ -48,6 +46,8 @@ All of this is just turned into a submission script that will look like this:
 mkdir -p /data/Project_X/Sample_Y_mapping
 /software/bowtie2 -x /genomes/genome_index -1 /data/Project_X/Sample_Y/Sample_Y_L001_R1_001.fastq.gz -2 Sample_Y_L001_R2_001.fastq.gz > Mapping-output_001.sam
 ```
+
+and this will be repeated for every input files, according to the -s parameters. So in this case, given that we have 2 input files for each command line and that we have 60 R1 and 60 R2 FastQ files and we have specified "-s 1", 60 different jobs will be created and submitted, each with a specific read pair to be processed by Bowtie.
 
 
 

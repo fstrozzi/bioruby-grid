@@ -69,7 +69,7 @@ will be turned into this submission script:
 mkdir -p /data/Project_X/Sample_Y_mapping # output dir
 /software/bowtie2 -x /genomes/genome_index -p 8 -1 /data/Project_X/Sample_Y/Sample_Y_L001_R1_001.fastq.gz -2 Sample_Y_L001_R2_001.fastq.gz > /data/Project_X/Sample_Y_mapping/bowtie_mapping-output_001.sam # command line
 mkdir -p /results/Sample_Y_mapping # final location where to copy job output once terminated
-cp /data/Project_X/Sample_Y_mapping/bowtie_mapping-output_001.sam /results/Sample_Y_mapping # copy of the outputs to the final location
+cp /data/Project_X/Sample_Y_mapping/bowtie_mapping-output_001.sam /results/Sample_Y_mapping # copy the outputs to the final location
 rm -f /data/Project_X/Sample_Y_mapping/bowtie_mapping-output_001.sam # deleting output data
 ```
 

@@ -49,17 +49,17 @@ and this will be repeated for every input file, according to the -s parameter. S
 Others options are possible at the moment, for example:
 
 * "-t" to execute only a single job, which is useful to test parameters
-* "-r" to specify a different location from the one of "-o" where to copy job output once terminated
+* "-r" to specify a different location from the one used in "-o". This folder will be used to copy job outputs once terminated
 * "-e" to erease output files once a job is completed (useful in conjuction with -r to delete local data on a computing node)
 * "-d" for a dry run, to create submissions scripts without sending them in the queue system
 
-A submission script generate using the following BioGrid command line
+The following BioGrid command line:
 
 ```shell
 bio-grid -i "/data/Project_X/Sample_Y/*_R1_*.fastq.gz","/data/Project_X/Sample_Y/*_R2_*.fastq.gz" -n bowtie_apping -c "/software/bowtie2 -x /genomes/genome_index -p 8 -1 <input1> -2 <input2> > <output>.sam" -o /data/Project_X/Sample_Y_mapping -s 1 -p 8 -r /results/Sample_Y_mapping -e
 ```
 
-will be turned into the following submission script:
+will be turned into this submission script:
 
 ```shell
 #!/bin/bash

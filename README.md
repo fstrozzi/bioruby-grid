@@ -59,7 +59,7 @@ Others options are possible at the moment, for example:
 A submission script generate using the following BioGrid command line
 
 ```shell
-bio-grid -i "/data/Project_X/Sample_Y/*_R1_*.fastq.gz","/data/Project_X/Sample_Y/*_R2_*.fastq.gz" -n bowtie_apping -c "/software/bowtie2 -x /genomes/genome_index -1 <input1> -2 <input2> > <output>.sam" -o /data/Project_X/Sample_Y_mapping -s 1 -p 8 -r /results/Sample_Y_mapping -e
+bio-grid -i "/data/Project_X/Sample_Y/*_R1_*.fastq.gz","/data/Project_X/Sample_Y/*_R2_*.fastq.gz" -n bowtie_apping -c "/software/bowtie2 -x /genomes/genome_index -p 8 -1 <input1> -2 <input2> > <output>.sam" -o /data/Project_X/Sample_Y_mapping -s 1 -p 8 -r /results/Sample_Y_mapping -e
 ```
 
 will be turned into the following submission script:
@@ -70,10 +70,26 @@ will be turned into the following submission script:
 #PBS -l ncpus=8
 
 mkdir -p /data/Project_X/Sample_Y_mapping # output dir
-/software/bowtie2 -x /genomes/genome_index -1 /data/Project_X/Sample_Y/Sample_Y_L001_R1_001.fastq.gz -2 Sample_Y_L001_R2_001.fastq.gz > /data/Project_X/Sample_Y_mapping/bowtie_mapping-output_001.sam # command line
+/software/bowtie2 -x /genomes/genome_index -p 8 -1 /data/Project_X/Sample_Y/Sample_Y_L001_R1_001.fastq.gz -2 Sample_Y_L001_R2_001.fastq.gz > /data/Project_X/Sample_Y_mapping/bowtie_mapping-output_001.sam # command line
 mkdir -p /results/Sample_Y_mapping # final location where to copy job output once terminated
 cp /data/Project_X/Sample_Y_mapping/bowtie_mapping-output_001.sam /results/Sample_Y_mapping # copy of the outputs to the final location
 rm -f /data/Project_X/Sample_Y_mapping/bowtie_mapping-output_001.sam # deleting output data
+```
+
+For a complete list of current BioGrid parameters, type "bio-grid -h":
+
+```shell
+    -n, --name NAME                  Analysis name
+    -s, --split-number NUMBER        Number of input files (or group of files) to use per job
+    -p, --processes PROCESSES        Number of processes per job
+    -c, --command-line COMMANDLINE   Command line to be executed
+    -o, --output OUTPUT              Output folder
+    -r, --copy-to LOCATION           Copy the output once a job is terminated
+    -e, --erease-output              Delete job output data when completed (useful to delete output temporary files on a computing node)
+    -d, --dry                        Dry run. Just write the job scripts without sending them in queue (for debugging or testing)
+    -t, --test                       Start the mapping only with the first group of reads (e.g. for testing parameters)
+    -i, --input INPUT1,INPUT2...     Location where to find input files (accepts wildecards). You can specify more than one input location, just provide a comma separated list
+    -h, --help                       Display this screen
 ```
 
 Contributing to bioruby-grid

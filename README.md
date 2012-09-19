@@ -85,7 +85,7 @@ For a complete list of current BioGrid parameters, type "bio-grid -h":
     -e, --erease-output              Delete job output data when completed (useful to delete output temporary files on a computing node)
     -d, --dry                        Dry run. Just write the job scripts without sending them in queue (for debugging or testing)
     -t, --test                       Start the mapping only with the first group of reads (e.g. for testing parameters)
-    -i, --input INPUT1,INPUT2...     Location where to find input files (accepts wildecards). You can specify more than one input location, just provide a comma separated list
+    -i, --input INPUT1,INPUT2...     Location where to find input files (accepts wildcards). You can specify more than one input location, just provide a comma separated list
     -h, --help                       Display this screen
 ```
 

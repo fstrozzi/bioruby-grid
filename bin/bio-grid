@@ -1,6 +1,8 @@
 #!/usr/bin/env ruby
 
 require 'optparse'
+$:<< File.expand_path(File.join(File.dirname(File.dirname __FILE__),"lib"))
+require 'bioruby-grid'
 
 options = {}
 options[:sep] = ","
@@ -50,6 +52,8 @@ optparse = OptionParser.new do |opts|
 		options[:sep] = sep
 	end
 
+	opts.on("--keep-scripts","Keep all the running scripts created for all the jobs") {options[:keep] = true}
+
 	opts.on("-h","--help","Display this screen") do
 		puts opts
 		print "\n"
@@ -63,58 +67,6 @@ raise OptionParser::MissingArgument,"-c, --command-line [command line]\n" if opt
 raise OptionParser::MissingArgument,"-n, --name [analysis name]\n" if options[:name].nil?
 raise OptionParser::MissingArgument,"-o, --output [output folder]\n" if options[:output].nil?
 
-
-groups = Hash.new {|h,k| h[k] = [] }
-options[:input].each_with_index do |location,index|
-	if options[:number] == "all"
-		groups["input"] << Dir.glob(location).sort
-	else
-		Dir.glob(location).sort.each_slice(options[:number].to_i) {|subgroup| groups["input#{index+1}"] << subgroup}
-	end
-end
-
-inputs = groups.keys.sort
-
-groups[inputs.shift].each_with_index do |input1,index|
-	out = File.open("job.sh","w")
-	out.write("#!/bin/bash\n#PBS -N #{options[:name]}\n#PBS -l ncpus=#{options[:processes]}\n\n")
-	out.write("mkdir -p #{options[:output]}\n")
-	
-	commandline = ""
-	commandline = options[:cmd].gsub(/<input1>|<input>/,input1.join(options[:sep]))
-	inputs.each do |input|
-		commandline.gsub!(/<#{input}>/,groups[input].shift.join(options[:sep]))
-	end
-
-	job_output = ""
-	if commandline =~/<output>\.(\S+)/
-		extension = $1
-		job_output = options[:output]+"/"+options[:name]+"_output_%03d" % (index+1).to_s
-		commandline.gsub!(/<output>/,job_output)	
-		job_output << ".#{extension}"
-	else
-		options[:output_folder] = true
-		commandline.gsub!(/<output>/,options[:output])
-		job_output = options[:output]
-	end
-	out.write(commandline+"\n")
-	
-	if options[:copy]
-		out.write("mkdir -p #{options[:copy]}\n")
-		copy_type = (options[:output_folder]) ? "cp -r" : "cp"
-		out.write("#{copy_type} #{job_output} #{options[:copy]}\n")
-	end
-
-	if options[:clean]
-		rm_type = (options[:output_folder]) ? "rm -fr" : "rm -f"
-		out.write("#{rm_type} #{job_output}")
-	end
-	out.close
-	
-	system("qsub job.sh") unless options[:dry]
-	
-	break if options[:test]
-end
-
+Bio::Grid.run(options)
 
 

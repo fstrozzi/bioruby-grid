@@ -21,7 +21,7 @@ module Bio
 				job_output = ""
 				if commandline =~/<output>\.(\S+)/
 					extension = $1
-					job_output = self.options[:output]+"/"+self.options[:name]+"_output_%03d" % (index+1).to_s + self.options[:parameter_value]
+					job_output = self.options[:output]+"/"+self.options[:name]+"_output_%03d" % (index+1).to_s + "#{self.options[:parameter_value]}"
 					commandline.gsub!(/<output>/,job_output)	
 					job_output << ".#{extension}"
 				else
@@ -56,7 +56,7 @@ module Bio
 
 			def run(filename)
 				self.write_runner(filename)
-				system("qsub #{job.runner}") unless self.options[:dry]
+				system("qsub #{self.runner}") unless self.options[:dry]
 			end
 
 			def set_scheduler_options(type)

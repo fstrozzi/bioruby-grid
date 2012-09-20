@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = "bio-grid"
-  s.version = "0.1.0"
+  s.version = "0.2.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Francesco Strozzi"]
@@ -26,6 +26,10 @@ Gem::Specification.new do |s|
     "Rakefile",
     "VERSION",
     "bin/bio-grid",
+    "bio-grid.gemspec",
+    "lib/bio/.grid.rb.swp",
+    "lib/bio/grid.rb",
+    "lib/bio/grid/job.rb",
     "lib/bioruby-grid.rb",
     "spec/bioruby-grid_spec.rb",
     "spec/spec_helper.rb"

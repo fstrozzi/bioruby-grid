@@ -90,6 +90,34 @@ For a complete list of current BioGrid parameters, type "bio-grid -h":
     -h, --help                       Display this screen
 ```
 
+Advanced stuff
+==============
+
+Ok let's unleash the potential of BioGrid.
+By putting together an automatic system to generate and submit jobs on a queue systems and a command line template approach, we can do some interesting things.
+
+Parameters sampling and testing
+-------------------------------
+
+The tipical scenario is when I have to run a tool on a new dataset and I would like to test different parameters to asses which are the better ones for my analysis.
+This can be easily done with BioGrid. For example:
+
+```shell
+bio-grid -i "/data/Project_X/Sample_Y/*_R1_*.fastq.gz","/data/Project_X/Sample_Y/*_R2_*.fastq.gz" -n bowtie_mapping -c "/software/bowtie2 -x /genomes/genome_index -p 8 -L <22,32,2> -1 <input1> -2 <input2> > <output>.sam" -o /data/Project_X/Sample_Y_mapping -s 1 -p 8 -r /results/Sample_Y_mapping -e -t
+```
+
+The key points here are the ```-L <22,32,2>``` in the command line template and the ```-t``` options of BioGrid. The first is a way to tell BioGrid to generate a number of similar jobs, each one with a different value for the parameter ```-L```. The values are decided based on the information passsed within the ```< >```:
+
+* the first number is the first value that the parameter will take
+* the second number is the last value that the parameter will take
+* the third number is the increment to generate the range of values in between
+
+So in this case, the ```-L``` parameter will take 5 different values: 22, 24, 26, 28, 30 and 32.
+
+Last but not least, the ```-t``` option is essential so that only a single job per input file (or group of fileis) will be executed. Sampling parameters values is a typical combinatorial approach, so the this option avoids generating hundreds of different jobs only to sample a parameter. Coming back to the initial example, if I have 60 pairs of FastQ files, without the ```-t``` option, the job number will be 60x5 = 300 which is just crazy when you want to test different parameters. 
+
+So far, BioGrid does not support sampling more than one parameter at the same time.
+
 Contributing to bioruby-grid
 ============================
  

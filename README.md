@@ -13,7 +13,7 @@ It is particularly useful when dealing with BigData analysis (e.g. NGS data proc
 The tool for now supports only PBS queue systems, but can be easily expanded to account also for other queueing systems.
 
 A typical example 
-=================
+-----------------
 
 Let's say I have a bunch of FastQ files that I want to analyze using my favorite reads mapping tool. These files come from a typical Illumina paired end sequencing and I have 60 files from the read 1 and another 60 files from the read 2. Given that I have a distributed system I want to spread the alignments on the cluster (or grid), to speed up the analysis as much as possible. 
 
@@ -46,7 +46,10 @@ mkdir -p /data/Project_X/Sample_Y_mapping
 
 and this will be repeated for every input file, according to the -s parameter. So, in this case given that we have 2 input files for each command line and that we had 60 R1 and 60 R2 FastQ files and we have specified "-s 1", 60 different jobs will be created and submitted, each with a specific read pair to be processed by Bowtie.
 
-Others options are possible at the moment, for example:
+Other options
+-------------
+
+With BioGrid you can specify many different tasks for the job to execute, for example:
 
 * "-t" to execute only a single job, which is useful to test parameters
 * "-r" to specify a different location from the one used in "-o". This folder will be used to copy job outputs once terminated

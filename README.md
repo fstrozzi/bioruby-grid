@@ -1,14 +1,12 @@
 bioruby-grid
 ============
 
-Utility to create and distribute jobs
+Utility to create and distribute jobs on a queue system. It is particularly suited to process BigData (i.e. NGS analyses), helping generating hundreds of different jobs with ease to crunch large datasets.
 
 Usage
 =====
 
 This utility is a command line based tool built around the concept of a template that can be reused to generate tens, hundreds or thousands of different jobs to be sent on a queue system.
-
-It is particularly useful when dealing with BigData analysis (e.g. NGS data processing) on a distributed system.
 
 The tool for now supports only PBS queue systems, but can be easily expanded to account also for other queueing systems.
 
@@ -25,13 +23,13 @@ Instead of having to manually create a number of running scripts or rewrite for 
 
 What is happening here is the following:
 
-* the "-i" options specifies the input files or, as in this case, the location where to find input files based on a typical wildcard expression. You can actually specify as many input files/locations as you need using a comma separated list.
-* the "-n" specify the job name
-* the "-c" is the command line to be executed on the cluster / grid system. What BioGrid does is to fill in the ```<input1>```,```<input2>``` and ```<output>``` placeholders with the corresponding parameters passed on the command line. This is done for each input file and BioGrid will check if the ```<output>``` placeholder has an extension (like .sam, .out etc.) and will generate a unique output file name for each job. IMPORTANT: If no extension is specified for the ```<output>``` placeholder, BioGrid will think the job will generate more than one output files, that will be saved into the folder specified by the "-o" options. Therefore it will manage the output as a whole directory, copying and/or removing the entire folder if "-r" and "-e" options are present (check below to see what these options are expected to do).
+* the ```-i``` options specifies the input files or, as in this case, the location where to find input files based on a typical wildcard expression. You can actually specify as many input files/locations as you need using a comma separated list.
+* the ```-n``` specify the job name
+* the ```-c``` is the command line to be executed on the cluster / grid system. What BioGrid does is to fill in the ```<input1>```,```<input2>``` and ```<output>``` placeholders with the corresponding parameters passed on the command line. This is done for each input file and BioGrid will check if the ```<output>``` placeholder has an extension (like .sam, .out etc.) and will generate a unique output file name for each job. IMPORTANT: If no extension is specified for the ```<output>``` placeholder, BioGrid will think the job will generate more than one output files, that will be saved into the folder specified by the "-o" options. Therefore it will manage the output as a whole directory, copying and/or removing the entire folder if "-r" and "-e" options are present (check below to see what these options are expected to do).
 
-* the "-o" set the location where output files for each job will be saved. Only provide the folder where you want to save the outut file(s), BioGrid will generate a unique file name if needed.
-* the "-s" is a key parameter to specify the number of input files (or group of files when more than one input is present in the command line) to be used for each job. So, going back to the FastQ example, if -s 1 is specified, each job will be run with exactly one FastQ R1 file and one FastQ R2 file. This gives you a great power to decide how to split the entire dataset analysis across multiple computing nodes.
-* the "-p" parameter indicates how many processes we want to use for each job. This number needs to match with the actual number of threads / processes that our command or tool will use for the analysis.
+* the ```-o``` set the location where output files for each job will be saved. Only provide the folder where you want to save the outut file(s), BioGrid will generate a unique file name if needed.
+* the ```-s``` is a key parameter to specify the number of input files (or group of files when more than one input is present in the command line) to be used for each job. So, going back to the FastQ example, if -s 1 is specified, each job will be run with exactly one FastQ R1 file and one FastQ R2 file. This gives you a great power to decide how to split the entire dataset analysis across multiple computing nodes.
+* the ```-p``` parameter indicates how many processes we want to use for each job. This number needs to match with the actual number of threads / processes that our command or tool will use for the analysis.
 
 All of this is just turned into a submission script that will look like this:
 
@@ -51,10 +49,10 @@ Other options
 
 With BioGrid you can specify many different tasks for the job to execute, for example:
 
-* "-t" to execute only a single job, which is useful to test parameters
-* "-r" to specify a different location from the one used in "-o". This folder will be used to copy job outputs once terminated
-* "-e" to erease output files once a job is completed (useful in conjuction with -r to delete local data on a computing node)
-* "-d" for a dry run, to create submissions scripts without sending them in the queue system
+* ```-t``` to execute only a single job, which is useful to test parameters
+* ```-r``` to specify a different location from the one used in "-o". This folder will be used to copy job outputs once terminated
+* ```-e``` to erease output files once a job is completed (useful in conjuction with -r to delete local data on a computing node)
+* ```-d``` for a dry run, to create submissions scripts without sending them in the queue system
 
 The following BioGrid command line:
 

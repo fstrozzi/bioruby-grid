@@ -27,7 +27,6 @@ Gem::Specification.new do |s|
     "VERSION",
     "bin/bio-grid",
     "bio-grid.gemspec",
-    "lib/bio/.grid.rb.swp",
     "lib/bio/grid.rb",
     "lib/bio/grid/job.rb",
     "lib/bioruby-grid.rb",

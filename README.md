@@ -27,7 +27,7 @@ What is happening here is the following:
 
 * the "-i" options specifies the input files or, as in this case, the location where to find input files based on a typical wildcard expression. You can actually specify as many input files/locations as you need using a comma separated list.
 * the "-n" specify the job name
-* the "-c" is the command line to be executed on the cluster / grid system. What BioGrid does is to fill in the ```<input1>```,```<input2>``` and ```<output>``` placeholders with the corresponding parameters passed on the command line. This is done for each input file and BioGrid will generate a unique output file name for each job.
+* the "-c" is the command line to be executed on the cluster / grid system. What BioGrid does is to fill in the ```<input1>```,```<input2>``` and ```<output>``` placeholders with the corresponding parameters passed on the command line. This is done for each input file and BioGrid will check if the ```<output>``` placeholder has an extension (like .sam, .out etc.) and will generate a unique output file name for each job. IMPORTANT: If no extension is specified for the ```<output>``` placeholder, BioGrid will think the job will generate more than one output files, that will be saved into the folder specified by the "-o" options. Therefore it will manage the output as a whole directory, copying and/or removing the entire folder if "-r" and "-e" options are present (check below to see what these options are expected to do).
 
 * the "-o" just specify the location where output files for each job will be saved
 * the "-s" is a key parameter to specify the number of input files (or group of files when more than one input is present in the command line) to be used for each job. So, going back to the FastQ example, if -s 1 is specified, each job will be run with exactly one FastQ R1 file and one FastQ R2 file. This gives you a great power to decide how to split the entire dataset analysis across multiple computing nodes.
@@ -77,7 +77,7 @@ For a complete list of current BioGrid parameters, type "bio-grid -h":
 
 ```shell
     -n, --name NAME                  Analysis name
-    -s, --split-number NUMBER        Number of input files (or group of files) to use per job
+    -s, --split-number NUMBER        Number of input files (or group of files) to use per job. If all the files in a location need to be used for a single job, just specify 'all'
     -p, --processes PROCESSES        Number of processes per job
     -c, --command-line COMMANDLINE   Command line to be executed
     -o, --output OUTPUT              Output folder
@@ -86,6 +86,7 @@ For a complete list of current BioGrid parameters, type "bio-grid -h":
     -d, --dry                        Dry run. Just write the job scripts without sending them in queue (for debugging or testing)
     -t, --test                       Start the mapping only with the first group of reads (e.g. for testing parameters)
     -i, --input INPUT1,INPUT2...     Location where to find input files (accepts wildcards). You can specify more than one input location, just provide a comma separated list
+        --sep SEPARATOR              Input file separator [Default: , ]
     -h, --help                       Display this screen
 ```
 

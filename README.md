@@ -51,8 +51,8 @@ Other options
 With BioGrid you can specify many different tasks for the job to execute, for example:
 
 * ```-t``` to execute only a single job, which is useful to test parameters
-* ```-r``` to specify a different location from the one used in "-o". This folder will be used to copy job outputs once terminated
-* ```-e``` to erease output files once a job is completed (useful in conjuction with -r to delete local data on a computing node)
+* ```-r``` to specify a different location from the one used in ```-o```. This folder will be used to copy job outputs once terminated
+* ```-e``` to erease output files/folders specified by ```-o``` once a job is completed (useful in conjuction with ```-r``` to delete local data on a computing node)
 * ```-d``` for a dry run, to create submissions scripts without sending them in the queue system
 
 The following BioGrid command line:
@@ -89,6 +89,7 @@ For a complete list of current BioGrid parameters, type "bio-grid -h":
     -t, --test                       Start the mapping only with the first group of reads (e.g. for testing parameters)
     -i, --input INPUT1,INPUT2...     Location where to find input files (accepts wildcards). You can specify more than one input location, just provide a comma separated list
         --sep SEPARATOR              Input file separator [Default: , ]
+        --keep-scripts               Keep all the running scripts created for all the jobs
     -h, --help                       Display this screen
 ```
 

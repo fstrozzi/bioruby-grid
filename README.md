@@ -112,9 +112,9 @@ The key points here are the ```-L <22,32,2>``` in the command line template and 
 * the second number is the last value that the parameter will take
 * the third number is the increment to generate the range of values in between
 
-So in this case, the ```-L``` parameter will take 5 different values: 22, 24, 26, 28, 30 and 32.
+So in this case, the ```-L``` parameter will take 6 different values: 22, 24, 26, 28, 30 and 32.
 
-Last but not least, the ```-t``` option is essential so that only a single job per input file (or group of fileis) will be executed. Sampling parameters values is a typical combinatorial approach, so the this option avoids generating hundreds of different jobs only to sample a parameter. Coming back to the initial example, if I have 60 pairs of FastQ files, without the ```-t``` option, the job number will be 60x5 = 300 which is just crazy when you want to test different parameters. 
+Last but not least, the ```-t``` option is essential so that only a single job per input file (or group of files) will be executed. Sampling parameters values is a typical combinatorial approach and this option avoids generating hundreds of different jobs only to sample a parameter. Coming back to the initial example, if I have 60 pairs of FastQ files, without the ```-t``` option, the job number will be 60x6 = 360, which is just crazy when you only want to test different parameter values. 
 
 So far, BioGrid does not support sampling more than one parameter at the same time.
 

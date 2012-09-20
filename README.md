@@ -77,7 +77,7 @@ rm -f /data/Project_X/Sample_Y_mapping/bowtie_mapping-output_001.sam # deleting 
 
 For a complete list of current BioGrid parameters, type "bio-grid -h":
 
-```shell
+```
     -n, --name NAME                  Analysis name
     -s, --split-number NUMBER        Number of input files (or group of files) to use per job. If all the files in a location need to be used for a single job, just specify 'all'
     -p, --processes PROCESSES        Number of processes per job

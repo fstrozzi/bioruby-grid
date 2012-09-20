@@ -3,8 +3,7 @@
 require 'optparse'
 
 options = {}
-options[:clean] = false
-options[:test] = false
+options[:sep] = ","
 
 optparse = OptionParser.new do |opts|	
 	opts.banner = "\nCopyright(c) 2012 Francesco Strozzi\nUtility to create and distribute jobs on a queue system.\n\nE.g. #{$0} -i \"/Project_X/Sample_Y/*_R1_*.fastq\",\"/Project_X/Sample_Y/*_R2_*.fastq\" --name bowtie2 -s 10 -p 12 --command-line \"/software/bowtie2 -x /genomes/bowtie2_index/genome_index -1 <input1> -2 <input2> -p 12 > <output>.sam\" --output /tmp/Sample_Y_mapping --copy-to /archive/Sample_Y_mapping --erease-output\n\n\n"
@@ -13,7 +12,7 @@ optparse = OptionParser.new do |opts|
 		options[:name] = name
 	end
 
-	opts.on("-s","--split-number NUMBER","Number of input files (or group of files) to use per job") do |number| 
+	opts.on("-s","--split-number NUMBER","Number of input files (or group of files) to use per job. If all the files in a location need to be used for a single job, just specify 'all'") do |number| 
 		options[:number] = number
 	end
 
@@ -47,6 +46,10 @@ optparse = OptionParser.new do |opts|
 		options[:input] = input
 	end
 
+	opts.on("--sep SEPARATOR","Input file separator [Default: , ]") do |sep|
+		options[:sep] = sep
+	end
+
 	opts.on("-h","--help","Display this screen") do
 		puts opts
 		print "\n"
@@ -63,8 +66,11 @@ raise OptionParser::MissingArgument,"-o, --output [output folder]\n" if options[
 
 groups = Hash.new {|h,k| h[k] = [] }
 options[:input].each_with_index do |location,index|
-	subgroup = []
-	Dir.glob(location).sort.each_slice(options[:number].to_i) {|subgroup| groups["input#{index+1}"] << subgroup}
+	if options[:number] == "all"
+		groups["input"] << Dir.glob(location).sort
+	else
+		Dir.glob(location).sort.each_slice(options[:number].to_i) {|subgroup| groups["input#{index+1}"] << subgroup}
+	end
 end
 
 inputs = groups.keys.sort
@@ -75,22 +81,34 @@ groups[inputs.shift].each_with_index do |input1,index|
 	out.write("mkdir -p #{options[:output]}\n")
 	
 	commandline = ""
-	commandline = options[:cmd].gsub(/<input1>|<input>/,input1.join(","))
+	commandline = options[:cmd].gsub(/<input1>|<input>/,input1.join(options[:sep]))
 	inputs.each do |input|
-		commandline.gsub!(/<#{input}>/,groups[input].shift.join(","))
+		commandline.gsub!(/<#{input}>/,groups[input].shift.join(options[:sep]))
 	end
-	output = options[:output]+"/"+options[:name]+"_output_%03d" % (index+1).to_s
 
-	commandline.gsub!(/<output>/,output)	
-	output << ".#{$1}" if commandline =~/#{output}\.(\S+)/
+	job_output = ""
+	if commandline =~/<output>\.(\S+)/
+		extension = $1
+		job_output = options[:output]+"/"+options[:name]+"_output_%03d" % (index+1).to_s
+		commandline.gsub!(/<output>/,job_output)	
+		job_output << ".#{extension}"
+	else
+		options[:output_folder] = true
+		commandline.gsub!(/<output>/,options[:output])
+		job_output = options[:output]
+	end
 	out.write(commandline+"\n")
 	
 	if options[:copy]
 		out.write("mkdir -p #{options[:copy]}\n")
-		out.write("cp #{output} #{options[:copy]}\n")
+		copy_type = (options[:output_folder]) ? "cp -r" : "cp"
+		out.write("#{copy_type} #{job_output} #{options[:copy]}\n")
 	end
-	
-	out.write("rm -f #{output}") if options[:clean]
+
+	if options[:clean]
+		rm_type = (options[:output_folder]) ? "rm -fr" : "rm -f"
+		out.write("#{rm_type} #{job_output}")
+	end
 	out.close
 	
 	system("qsub job.sh") unless options[:dry]

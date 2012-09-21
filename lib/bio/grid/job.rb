@@ -9,7 +9,6 @@ module Bio
 			end
 
 			def	set_output_dir
-				p "mkdir -p #{self.options[:output]}\n"
 				self.instructions << ("mkdir -p #{self.options[:output]}\n")
 			end
 

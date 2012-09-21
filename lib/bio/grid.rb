@@ -9,6 +9,7 @@ module Bio
 		end
 
 		def self.run(options)
+			options[:number] = 1 unless options[:number]
 			grid = self.new options[:input], options[:number]
 			groups = grid.prepare_input_groups
 			inputs = groups.keys.sort

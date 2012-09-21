@@ -14,7 +14,6 @@ module Bio
 
 			def set_commandline(cmd_line,inputs,input1,groups,index)	
 				commandline = cmd_line.gsub(/<input1>|<input>/,input1.join(self.options[:sep]))
-				p groups
 				inputs.each do |input|
 					commandline.gsub!(/<#{input}>/,groups[input][index].join(self.options[:sep]))
 				end

@@ -14,7 +14,6 @@ module Bio
 			groups = grid.prepare_input_groups
 			inputs = groups.keys.sort
 			groups[inputs.shift].each_with_index do |input1,index|
-				
 				if options[:cmd]=~/<(\d+),(\d+)(,\d+)*>/
 					step = ($3) ? $3.tr(",","").to_i : 1
 					range = Range.new($1.to_i,$2.to_i,false).step(step).to_a
@@ -37,7 +36,7 @@ module Bio
 			groups = Hash.new {|h,k| h[k] = [] }
 			self.input.each_with_index do |location,index|
 				if self.number == "all"
-					groups["input"] << Dir.glob(location).sort
+					groups["input#{index+1}"] = [Dir.glob(location).sort]
 				else
 					Dir.glob(location).sort.each_slice(self.number.to_i) {|subgroup| groups["input#{index+1}"] << subgroup}
 				end

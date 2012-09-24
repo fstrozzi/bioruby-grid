@@ -25,8 +25,8 @@ module Bio
 					job_output << ".#{extension}"
 				else
 					self.options[:output_folder] = true
-					commandline.gsub!(/<output>/,"#{Time.now.to_i}"+self.options[:output]+"_#{index+1}")
-					job_output = self.options[:output]
+					commandline.gsub!(/<output>/,self.options[:output]+"/#{Time.now.to_i}_"+self.options[:name])
+					job_output = self.options[:output]+"/#{Time.now.to_i}_"+self.options[:name]
 				end
 				self.instructions << commandline+"\n"
 				self.job_output = job_output

@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "bio-grid"
-  s.version = "0.2.3"
+  s.version = "0.2.4"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Francesco Strozzi"]
-  s.date = "2012-09-21"
+  s.date = "2012-09-24"
   s.description = "A BioGem to submit jobs on a queue system"
   s.email = "francesco.strozzi@gmail.com"
   s.executables = ["bio-grid"]

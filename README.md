@@ -53,13 +53,7 @@ For each job, BioGrid will set an output name according to a UUID generated on t
 IMPORTANT: the UUID will be the same for all the jobs submitted in a same BioGrid run, the only changing part will be the incremental number.
 
 If no extension is specified for the ```<output>``` placeholder in the command line definition, BioGrid will assume the job will generate more than one output file and that those files will be saved into the folder specified by the "-o" option. Therefore it will manage the output as a whole directory, copying and/or removing the entire folder if ```-r``` and ```-e``` options are present (check the [Other options](https://github.com/fstrozzi/bioruby-grid#other-options) section to see what these options are expected to do).
-The same rule for output name apply also in the case of an output folder and the final directory will look like this:
-
-```shell
-3cb0b800_Bowtie_index/
-```
-
-without the incremental number, which is only used for output files.
+The same rule for output name apply also in the case of an output folder.
 
 If you want to do some [Advanced stuff](https://github.com/fstrozzi/bioruby-grid#advanced-stuff) and run parameters testing, the output names will be changed accordingly by BioGrid. So if I am running BioGrid to test some parameter ```-L``` for my favorite tool, and I am sampling it, with three different values, let's say 3, 7 and 10 the corresponding output files will be:
 

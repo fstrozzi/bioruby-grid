@@ -2,15 +2,17 @@ module Bio
 	
 	class Grid
 	
-		attr_accessor :input,:number
+		attr_accessor :input,:number,:uuid
 		def initialize(input,number)
 			@input = input
 			@number = number
+			@uuid = UUID.new.generate.split("-").first
 		end
 
 		def self.run(options)
 			options[:number] = 1 unless options[:number]
 			grid = self.new options[:input], options[:number]
+			options[:uuid] = grid.uuid
 			groups = grid.prepare_input_groups
 			inputs = groups.keys.sort
 			groups[inputs.shift].each_with_index do |input1,index|

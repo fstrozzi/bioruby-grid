@@ -38,6 +38,10 @@ optparse = OptionParser.new do |opts|
 		options[:clean] = true
 	end
 
+	opts.on("-a","--params PARAM1,PARAM2...",Array,"List of parameters to use for sampling") do |params|
+		options[:params] = params
+	end
+
 	opts.on("-d","--dry","Dry run. Just write the job scripts without sending them in queue (for debugging or testing)") {options[:dry] = true}
 
 	opts.on("-t","--test","Start the mapping only with the first group of reads (e.g. for testing parameters)") do |test|

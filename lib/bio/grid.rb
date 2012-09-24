@@ -20,7 +20,14 @@ module Bio
 					range.each do |value|
 						cmd_line = options[:cmd].gsub(/<(\d+),(\d+)(,\d+)*>/,value.to_s)
 						job = Bio::Grid::Job.new(options) # inherit global options
-						job.options[:parameter_value] = "-param-#{value}"
+						job.options[:parameter_value] = "-param:#{value}"
+						job.execute(cmd_line,inputs,input1,groups,index)
+					end
+				elsif options[:params]
+					options[:params].each do |p|
+						cmd_line = options[:cmd].gsub(/<param>|<parameter>/,p)
+						job = Bio::Grid::Job.new(options)
+						job.options[:parameter_value] = "-param:#{p}"
 						job.execute(cmd_line,inputs,input1,groups,index)
 					end
 				else

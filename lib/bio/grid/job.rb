@@ -2,10 +2,11 @@ module Bio
 	class Grid
 		class Job
 			
-			attr_accessor :options, :instructions, :job_output, :runner
+			attr_accessor :options, :instructions, :job_output, :runner, :uuid
 			def initialize(options)
 				@options = options
 				self.instructions = []
+				self.uuid = UUID.new.generate.split("-").first
 			end
 
 			def	set_output_dir
@@ -21,13 +22,13 @@ module Bio
 				job_output = ""
 				if commandline =~/<output>\.(\S+)/
 					extension = $1
-					job_output = self.options[:output]+"/#{Time.now.to_i}"+self.options[:name]+"_output_%03d" % (index+1).to_s + "#{self.options[:parameter_value]}"
+					job_output = self.options[:output]+"/#{self.uuid}_"+self.options[:name]+"_output_%03d" % (index+1).to_s + "#{self.options[:parameter_value]}"
 					commandline.gsub!(/<output>/,job_output)	
 					job_output << ".#{extension}"
 				else
 					self.options[:output_folder] = true
-					commandline.gsub!(/<output>/,self.options[:output]+"/#{Time.now.to_i}_"+self.options[:name])
-					job_output = self.options[:output]+"/#{Time.now.to_i}_"+self.options[:name]
+					job_output = self.options[:output]+"/#{self.uuid}_"+self.options[:name]
+					commandline.gsub!(/<output>/,job_output)
 				end
 				self.instructions << commandline+"\n"
 				self.job_output = job_output

@@ -70,7 +70,7 @@ If you are using the ```--param``` options to test non-numerical parameters, the
 ###Differences between output files and output folder
 
 BioGrid will act differently if the output of a single job is a file or a folder. You need to specify this, by adding a file extension to the ```<output>``` placeholder. So, for instance, if the output file of my job is a BAM file, I will need to specify this in the command line definition, by putting a ```<output>.bam``` .
-**If no extension is specified for the ```<output>``` placeholder in the command line definition, BioGrid will assume the job will generate more than one output file and that those files will be saved into the folder specified by the "-o" option**. Therefore it will manage the output as a whole directory, copying and/or removing the entire folder if ```-r``` and ```-e``` options are present (check the [Other options](https://github.com/fstrozzi/bioruby-grid#other-options) section to see what these options are expected to do).
+**If no extension is specified for the ```<output>``` placeholder in the command line definition, BioGrid will assume the job will generate more than one output file and that those files will be saved into the folder specified by the ```-o``` option**. Therefore it will manage the output as a whole directory, copying and/or removing the entire folder if ```-r``` and ```-e``` options are present (check the [Other options](https://github.com/fstrozzi/bioruby-grid#other-options) section to see what these options are expected to do).
 
 The naming conventions for the output folder are same as for the output files.
 

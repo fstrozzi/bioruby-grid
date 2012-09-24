@@ -50,9 +50,9 @@ For each job, BioGrid will set an output name according to a UUID generated on t
 ```shell
 3cb0b800_Bowtie_mapping_001.bam
 ```
-IMPORTANT: the UUID will be the same for all the jobs submitted in a same BioGrid run.
+IMPORTANT: the UUID will be the same for all the jobs submitted in a same BioGrid run, the only changing part will be the incremental number.
 
-If no extension is specified for the ```<output>``` placeholder in the command line definition, BioGrid will assume the job will generate more than one output file and that those files will be saved into the folder specified by the "-o" option. Therefore it will manage the output as a whole directory, copying and/or removing the entire folder if "-r" and "-e" options are present (check the [Other options](https://github.com/fstrozzi/bioruby-grid#other-options) section to see what these options are expected to do).
+If no extension is specified for the ```<output>``` placeholder in the command line definition, BioGrid will assume the job will generate more than one output file and that those files will be saved into the folder specified by the "-o" option. Therefore it will manage the output as a whole directory, copying and/or removing the entire folder if ```-r``` and ```-e``` options are present (check the [Other options](https://github.com/fstrozzi/bioruby-grid#other-options) section to see what these options are expected to do).
 The same rule for output name apply also in the case of an output folder and the final directory will look like this:
 
 ```shell

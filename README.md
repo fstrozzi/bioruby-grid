@@ -82,13 +82,13 @@ For a complete list of current BioGrid parameters, type "bio-grid -h":
     -s, --split-number NUMBER        Number of input files (or group of files) to use per job. If all the files in a location need to be used for a single job, just specify 'all'
     -p, --processes PROCESSES        Number of processes per job
     -c, --command-line COMMANDLINE   Command line to be executed
-    -o, --output OUTPUT              Output folder
+    -o, --output OUTPUT              Output folder. Needs a <output> placeholder in the command line
     -r, --copy-to LOCATION           Copy the output once a job is terminated
     -e, --erease-output              Delete job output data when completed (useful to delete output temporary files on a computing node)
-    -a, --params PARAM1,PARAM2...    List of parameters to use for sampling
+    -a, --params PARAM1,PARAM2...    List of parameters to use for testing. Needs a <param> placeholder in the command line
     -d, --dry                        Dry run. Just write the job scripts without sending them in queue (for debugging or testing)
     -t, --test                       Start the mapping only with the first group of reads (e.g. for testing parameters)
-    -i, --input INPUT1,INPUT2...     Location where to find input files (accepts wildcards). You can specify more than one input location, just provide a comma separated list
+    -i, --input INPUT1,INPUT2...     Location where to find input files (accepts wildcards). Needs <input(1,2,3...> placeholder(s) in the command line
         --sep SEPARATOR              Input file separator [Default: , ]
         --keep-scripts               Keep all the running scripts created for all the jobs
     -h, --help                       Display this screen
@@ -129,7 +129,7 @@ If you want to sample non-numerical parameters, with BioGrid it is possible to u
 bio-grid -i "/data/Project_X/Sample_Y/*_R1_*.fastq.gz","/data/Project_X/Sample_Y/*_R2_*.fastq.gz" -n bowtie_mapping -c "/software/bowtie2 -x /genomes/genome_index -p 8 <param> -1 <input1> -2 <input2> > <output>.sam" -o /data/Project_X/Sample_Y_mapping -s 1 -p 8 -r /results/Sample_Y_mapping -e --param "--sensitive","--very-sensitive","--fast" -t
 ```
 
-In this case, the key points are the ```<param>``` placeholder in the command line and the corresponding ```--params``` options in BioGrid, which specify a list of parameters to be used to generate and run different jobs, each one with a different parameter in the list. Again, even in this case, it is recommended to do parameters testing using the ```-t``` options, which only run a single job and not the full job array.
+In this case, the key points are the ```<param>``` placeholder in the command line and the corresponding ```--params``` options in BioGrid, which specify a list of parameters to be used to generate and run different jobs, each one with a different parameter in the list. Again, even in this case, it is recommended to do parameters testing using the ```-t``` option, which only runs a single job and not the full job array.
 
 So far, BioGrid does not support, for each run, sampling more than one parameter at the same time.
 

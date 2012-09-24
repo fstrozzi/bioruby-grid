@@ -20,12 +20,12 @@ module Bio
 				job_output = ""
 				if commandline =~/<output>\.(\S+)/
 					extension = $1
-					job_output = self.options[:output]+"/"+self.options[:name]+"_output_%03d" % (index+1).to_s + "#{self.options[:parameter_value]}"
+					job_output = self.options[:output]+"/#{Time.now.to_i}"+self.options[:name]+"_output_%03d" % (index+1).to_s + "#{self.options[:parameter_value]}"
 					commandline.gsub!(/<output>/,job_output)	
 					job_output << ".#{extension}"
 				else
 					self.options[:output_folder] = true
-					commandline.gsub!(/<output>/,self.options[:output])
+					commandline.gsub!(/<output>/,"#{Time.now.to_i}"+self.options[:output]+"_#{index+1}")
 					job_output = self.options[:output]
 				end
 				self.instructions << commandline+"\n"

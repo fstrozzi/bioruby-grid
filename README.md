@@ -85,6 +85,7 @@ For a complete list of current BioGrid parameters, type "bio-grid -h":
     -o, --output OUTPUT              Output folder
     -r, --copy-to LOCATION           Copy the output once a job is terminated
     -e, --erease-output              Delete job output data when completed (useful to delete output temporary files on a computing node)
+    -a, --params PARAM1,PARAM2...    List of parameters to use for sampling
     -d, --dry                        Dry run. Just write the job scripts without sending them in queue (for debugging or testing)
     -t, --test                       Start the mapping only with the first group of reads (e.g. for testing parameters)
     -i, --input INPUT1,INPUT2...     Location where to find input files (accepts wildcards). You can specify more than one input location, just provide a comma separated list
@@ -99,7 +100,7 @@ Advanced stuff
 Ok let's unleash the potential of BioGrid.
 By putting together an automatic system to generate and submit jobs on a queue systems and a command line template approach, we can do some interesting things.
 
-Parameters sampling and testing
+Numerical parameters sampling and testing
 -------------------------------
 
 The tipical scenario is when I have to run a tool on a new dataset and I would like to test different parameters to asses which are the better ones for my analysis.
@@ -119,7 +120,18 @@ So in this case, the ```-L``` parameter will take 6 different values: 22, 24, 26
 
 Last but not least, the ```-t``` option is essential so that only a single job per input file (or group of files) will be executed. Sampling parameters values is a typical combinatorial approach and this option avoids generating hundreds of different jobs only to sample a parameter. Coming back to the initial example, if I have 60 pairs of FastQ files, without the ```-t``` option, the job number will be 60x6 = 360, which is just crazy when you only want to test different parameter values. 
 
-So far, BioGrid does not support sampling more than one parameter at the same time.
+Others parameters sampling
+--------------------------
+
+If you want to sample non-numerical parameters, with BioGrid it is possible to use the ```--params``` option. So for instance, if I want to run Bowtie on my dataset to assess the results differences using the ```--sensitive```, ```--very-sensitive``` and ```--fast``` options, I can do it easely in this way:
+
+```shell
+bio-grid -i "/data/Project_X/Sample_Y/*_R1_*.fastq.gz","/data/Project_X/Sample_Y/*_R2_*.fastq.gz" -n bowtie_mapping -c "/software/bowtie2 -x /genomes/genome_index -p 8 <param> -1 <input1> -2 <input2> > <output>.sam" -o /data/Project_X/Sample_Y_mapping -s 1 -p 8 -r /results/Sample_Y_mapping -e --param "--sensitive","--very-sensitive","--fast" -t
+```
+
+In this case, the key points are the ```<param>``` placeholder in the command line and the corresponding ```--params``` options in BioGrid, which specify a list of parameters to be used to generate and run different jobs, each one with a different parameter in the list. Again, even in this case, it is recommended to do parameters testing using the ```-t``` options, which only run a single job and not the full job array.
+
+So far, BioGrid does not support, for each run, sampling more than one parameter at the same time.
 
 Contributing to bioruby-grid
 ============================

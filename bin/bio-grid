@@ -26,7 +26,7 @@ optparse = OptionParser.new do |opts|
 		options[:cmd] = cmd
 	end
 
-	opts.on("-o","--output OUTPUT","Output folder") do |out|
+	opts.on("-o","--output OUTPUT","Output folder. Needs a <output> placeholder in the command line") do |out|
 		options[:output] = out
 	end
 
@@ -38,7 +38,7 @@ optparse = OptionParser.new do |opts|
 		options[:clean] = true
 	end
 
-	opts.on("-a","--params PARAM1,PARAM2...",Array,"List of parameters to use for sampling") do |params|
+	opts.on("-a","--params PARAM1,PARAM2...",Array,"List of parameters to use for testing. Needs a <param> placeholder in the command line") do |params|
 		options[:params] = params
 	end
 
@@ -48,7 +48,7 @@ optparse = OptionParser.new do |opts|
 		options[:test] = true
 	end
 
-	opts.on("-i","--input INPUT1,INPUT2...",Array,"Location where to find input files (accepts wildcards). You can specify more than one input location, just provide a comma separated list") do |input|
+	opts.on("-i","--input INPUT1,INPUT2...",Array,"Location where to find input files (accepts wildcards). Needs <input(1,2,3...> placeholder(s) in the command line") do |input|
 		options[:input] = input
 	end
 

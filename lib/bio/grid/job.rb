@@ -5,11 +5,12 @@ module Bio
 			attr_accessor :options, :instructions, :job_output, :runner
 			def initialize(options)
 				@options = options
-				self.instructions = ""
+				self.instructions = []
 			end
 
 			def	set_output_dir
-				self.instructions << ("mkdir -p #{self.options[:output]}\n")
+				output_dir = (self.options[:output_folder]) ? "mkdir -p #{self.job_output}\ncd #{self.job_output}\n" : "mkdir -p #{self.options[:output]}\n"
+				self.instructions.insert(1,output_dir)
 			end
 
 			def set_commandline(cmd_line,inputs,input1,groups,index)	
@@ -48,7 +49,7 @@ module Bio
 			def write_runner(filename)
 				self.runner = filename
 				out = File.open(Dir.pwd+"/"+filename,"w")
-				out.write(self.instructions+"\n")
+				out.write(self.instructions.join+"\n")
 				out.close
 			end
 
@@ -63,8 +64,8 @@ module Bio
 
 			def	execute(command_line,inputs,input1,groups,index)
 				self.set_scheduler_options(:pbs) # set script specific options for the scheduling system
-				self.set_output_dir
         self.set_commandline(command_line,inputs,input1,groups,index)
+				self.set_output_dir
         self.append_options
         job_filename = (self.options[:keep]) ? "job_#{index+1}#{self.options[:parameter_value]}.sh" : "job.sh"
         self.run(job_filename)

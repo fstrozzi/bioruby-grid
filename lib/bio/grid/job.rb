@@ -18,15 +18,13 @@ module Bio
 				inputs.each do |input|
 					commandline.gsub!(/<#{input}>/,groups[input][index].join(self.options[:sep]))
 				end
-				job_output = ""
+				job_output = self.options[:output]+"/#{options[:uuid]}_"+self.options[:name]+"_%03d" % (index+1).to_s + "#{self.options[:parameter_value]}"
 				if commandline =~/<output>\.(\S+)/
 					extension = $1
-					job_output = self.options[:output]+"/#{options[:uuid]}_"+self.options[:name]+"_%03d" % (index+1).to_s + "#{self.options[:parameter_value]}"
 					commandline.gsub!(/<output>/,job_output)	
 					job_output << ".#{extension}"
 				else
 					self.options[:output_folder] = true
-					job_output = self.options[:output]+"/#{options[:uuid]}_"+self.options[:name]
 					commandline.gsub!(/<output>/,job_output)
 				end
 				self.instructions << commandline+"\n"

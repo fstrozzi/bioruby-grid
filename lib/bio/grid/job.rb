@@ -21,7 +21,7 @@ module Bio
 				job_output = ""
 				if commandline =~/<output>\.(\S+)/
 					extension = $1
-					job_output = self.options[:output]+"/#{options[:uuid]}_"+self.options[:name]+"_output_%03d" % (index+1).to_s + "#{self.options[:parameter_value]}"
+					job_output = self.options[:output]+"/#{options[:uuid]}_"+self.options[:name]+"_%03d" % (index+1).to_s + "#{self.options[:parameter_value]}"
 					commandline.gsub!(/<output>/,job_output)	
 					job_output << ".#{extension}"
 				else

@@ -25,10 +25,8 @@ What is happening here is the following:
 
 * the ```-i``` options specifies the input files or, as in this case, the location where to find input files based on a typical wildcard expression. You can actually specify as many input files/locations as you need using a comma separated list.
 * the ```-n``` specify the job name
-* the ```-c``` is the command line to be executed on the cluster / grid system. What BioGrid does is to fill in the ```<input1>```,```<input2>``` and ```<output>``` placeholders with the corresponding parameters passed on the command line. This is done for each input file (or each group of input files) and BioGrid will check if the ```<output>``` placeholder has an extension (like .sam, .out etc.) and will generate a unique output file name for each job. IMPORTANT: If no extension is specified for the ```<output>``` placeholder, BioGrid will assume the job will generate more than one output files and that those files will be saved into the folder specified by the "-o" option. Therefore it will manage the output as a whole directory, copying and/or removing the entire folder if "-r" and "-e" options are present (check the [Other options](https://github.com/fstrozzi/bioruby-grid#other-options) section to see what these options are expected to do).
-
-
-* the ```-o``` set the location where output files for each job will be saved. Only provide the folder where you want to save the output file(s), BioGrid will take care of generating a unique file name for the output, if needed.
+* the ```-c``` is the command line to be executed on the cluster / grid system. What BioGrid does is to fill in the ```<input1>```,```<input2>``` and ```<output>``` placeholders with the corresponding parameters passed on the command line. This is done for each input file (or each group of input files) and BioGrid will check if the ```<output>``` placeholder has an extension (like .sam, .out etc.) and will generate a unique output file name for each job. 
+* the ```-o``` set the location where output files for each job will be saved. Only provide the folder where you want to save the output file(s), BioGrid will take care of generating a unique file name for the output, if needed. Check the [Output management](https://github.com/fstrozzi/bioruby-grid#output-management) for more details.
 * the ```-s``` is a key parameter to specify the granularity of the jobs, setting the number of input files (or group of files, when more than one input placeholder is present in the command line) to be used for each job. So, going back to the FastQ example, if -s 1 is specified, each job will be run with exactly one FastQ R1 file and one FastQ R2 file. This gives you a great power in deciding how to split the entire dataset analysis across multiple computing nodes.
 * the ```-p``` parameter indicates how many processes we want to use for each job. This number needs to match with the actual number of threads / processes that our command or tool will use for the analysis.
 
@@ -44,6 +42,38 @@ mkdir -p /data/Project_X/Sample_Y_mapping
 ```
 
 and this will be repeated for every input file, according to the -s parameter. So, in this case given that we have 2 input files for each command line and that we had 60 R1 and 60 R2 FastQ files and we have specified "-s 1", 60 different jobs will be created and submitted, each with a specific read pair to be processed by Bowtie.
+
+Output management
+-----------------
+For each job, BioGrid will set an output name according to a UUID generated on the fly and the combination of the job name plus an incremental number. So a typical output file name will look like this:
+
+```shell
+3cb0b800_Bowtie_mapping_001.bam
+```
+If no extension is specified for the ```<output>``` placeholder in the command line definition, BioGrid will assume the job will generate more than one output file and that those files will be saved into the folder specified by the "-o" option. Therefore it will manage the output as a whole directory, copying and/or removing the entire folder if "-r" and "-e" options are present (check the [Other options](https://github.com/fstrozzi/bioruby-grid#other-options) section to see what these options are expected to do).
+The same rule for output name apply also in the case of an output folder and the final directory will look like this:
+
+```shell
+3cb0b800_Bowtie_index/
+```
+
+without the incremental number, which is only used for output files.
+
+If you want to do some [Advanced stuff](https://github.com/fstrozzi/bioruby-grid#advanced-stuff) and run parameters testing, the output names will be changed accordingly by BioGrid. So if I am running BioGrid to test some parameter ```-L``` for my favorite tool, and I am sampling it, with three different values, let's say 3, 7 and 10 the corresponding output files will be:
+
+```shell
+9ec55d90_tophat_001-param:3.sam
+9ec55d90_tophat_001-param:7.sam
+9ec55d90_tophat_001-param:10.sam
+```
+
+If you are using the ```--param``` options to test non-numerical parameters, the corresponding parameter value (or name) will be appended to the output file name in the same way:
+
+```shell
+9ec55d90_tophat_001-param:--sensitive.sam
+9ec55d90_tophat_001-param:--fast.sam
+```
+
 
 Other options
 -------------

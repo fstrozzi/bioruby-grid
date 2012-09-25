@@ -10,7 +10,7 @@ module Bio
 		end
 
 		def self.run(options)
-			options[:number] = 1 unless options[:number]
+			options[:number] = "all" unless options[:number]
 			grid = self.new options[:input], options[:number]
 			options[:uuid] = grid.uuid
 			groups = grid.prepare_input_groups
@@ -41,13 +41,15 @@ module Bio
 			end			
 		end
 
-		def	prepare_input_groups	
+		def	prepare_input_groups
 			groups = Hash.new {|h,k| h[k] = [] }
 			self.input.each_with_index do |location,index|
+				list = Dir.glob(location).sort
+				raise ArgumentError,"Input file or folder #{location} do not exist!" if list.empty?
 				if self.number == "all"
-					groups["input#{index+1}"] = [Dir.glob(location).sort]
+					groups["input#{index+1}"] = [list]
 				else
-					Dir.glob(location).sort.each_slice(self.number.to_i) {|subgroup| groups["input#{index+1}"] << subgroup}
+					list.each_slice(self.number.to_i) {|subgroup| groups["input#{index+1}"] << subgroup}
 				end
 			end
 			groups

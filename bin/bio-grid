@@ -56,6 +56,10 @@ optparse = OptionParser.new do |opts|
 		options[:sep] = sep
 	end
 
+	opts.on("--uuid UUID","Provide a UUID for the job array") do |uuid|
+		options[:uuid] = uuid
+	end
+
 	opts.on("--keep-scripts","Keep all the running scripts created for all the jobs") {options[:keep] = true}
 
 	opts.on("-h","--help","Display this screen") do

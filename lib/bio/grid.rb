@@ -3,16 +3,16 @@ module Bio
 	class Grid
 	
 		attr_accessor :input,:number,:uuid
-		def initialize(input,number)
+		def initialize(input,number, uuid)
 			@input = input
 			@number = number
-			@uuid = UUID.new.generate.split("-").first
+			@uuid = (options[:uuid]) ? options[:uuid] : UUID.new.generate.split("-").first 
 		end
 
 		def self.run(options)
 			options[:number] = "all" unless options[:number]
-			grid = self.new options[:input], options[:number]
-			options[:uuid] = grid.uuid
+			grid = self.new options[:input], options[:number], options[:uuid]
+			options[:uuid] = grid.uuid unless options[:uuid]
 			groups = grid.prepare_input_groups
 			inputs = groups.keys.sort
 			groups[inputs.shift].each_with_index do |input1,index|

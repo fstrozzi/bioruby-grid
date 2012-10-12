@@ -22,7 +22,7 @@ module Bio
 				if commandline =~/<output>\.(\S+)/
 					extension = $1
 					commandline.gsub!(/<output>/,job_output)	
-					job_output << ".#{extension}"
+					#job_output << ".#{extension}"
 				else
 					self.options[:output_folder] = true
 					commandline.gsub!(/<output>/,job_output)
@@ -35,12 +35,12 @@ module Bio
 				if self.options[:copy]
 					self.instructions << ("mkdir -p #{self.options[:copy]}\n")
 					copy_type = (self.options[:output_folder]) ? "cp -r" : "cp"
-					self.instructions << ("#{copy_type} #{self.job_output} #{self.options[:copy]}\n")
+					self.instructions << ("#{copy_type} #{self.job_output}* #{self.options[:copy]}\n")
 				end
 
 				if self.options[:clean]
 					rm_type = (self.options[:output_folder]) ? "rm -fr" : "rm -f"
-					self.instructions << ("#{rm_type} #{self.job_output}\n")
+					self.instructions << ("#{rm_type} #{self.job_output}*\n")
 				end	
 			end
 
@@ -62,11 +62,11 @@ module Bio
 
 			def	execute(command_line,inputs,input1,groups,index)
 				self.set_scheduler_options(:pbs) # set script specific options for the scheduling system
-        self.set_commandline(command_line,inputs,input1,groups,index)
+        		self.set_commandline(command_line,inputs,input1,groups,index)
 				self.set_output_dir
-        self.append_options
-        job_filename = (self.options[:keep]) ? "job_#{index+1}#{self.options[:parameter_value]}.sh" : "job.sh"
-        self.run(job_filename)
+        		self.append_options
+        		job_filename = (self.options[:keep]) ? "job_#{index+1}#{self.options[:parameter_value]}.sh" : "job.sh"
+        		self.run(job_filename)
 			end
 
 

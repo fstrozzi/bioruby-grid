@@ -6,7 +6,7 @@ module Bio
 		def initialize(input,number, uuid)
 			@input = input
 			@number = number
-			@uuid = (options[:uuid]) ? options[:uuid] : UUID.new.generate.split("-").first 
+			@uuid = uuid ? uuid : UUID.new.generate.split("-").first 
 		end
 
 		def self.run(options)

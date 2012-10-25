@@ -60,6 +60,9 @@ optparse = OptionParser.new do |opts|
 		options[:uuid] = uuid
 	end
 
+	opts.on("--path PATH1,PATH2 ...",Array,"Set the 'export PATH' directive") do |path|
+		options[:path] = path
+	end
 	opts.on("--keep-scripts","Keep all the running scripts created for all the jobs") {options[:keep] = true}
 
 	opts.on("-h","--help","Display this screen") do

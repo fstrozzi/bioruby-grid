@@ -41,7 +41,11 @@ module Bio
 				if self.options[:clean]
 					rm_type = (self.options[:output_folder]) ? "rm -fr" : "rm -f"
 					self.instructions << ("#{rm_type} #{self.job_output}*\n")
-				end	
+				end
+
+				if self.options[:path]
+					self.instructions.insert(2, "export PATH=$PATH:#{options[:path].join(':')}\n")
+				end
 			end
 
 			def write_runner(filename)
